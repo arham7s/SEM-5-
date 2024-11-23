@@ -1,0 +1,33 @@
+#include <stdio.h>
+#include <string.h>
+
+void character_count()
+{
+    int frame, i, length;
+    char data[100];
+    char transmitted_message[1000] = "";
+
+    printf("Enter the number of frames: ");
+    scanf("%d", &frame);
+
+    for (i = 0; i < frame; i++)
+    {
+        printf("Enter string %d: ", i + 1);
+        scanf("%s", data);
+
+        length = strlen(data) + 1;
+        char char_count[10];
+
+        sprintf(char_count, "%d", length);
+        strcat(transmitted_message, char_count);
+        strcat(transmitted_message, data);
+    }
+
+    printf("Character count is: %s\n", transmitted_message);
+}
+
+int main()
+{
+    character_count();
+    return 0;
+}
