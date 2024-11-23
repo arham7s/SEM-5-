@@ -1,0 +1,45 @@
+#include <stdio.h>
+
+void findclass(int firstoctet)
+{
+    if (firstoctet >= 1 && firstoctet <= 126)
+        printf("CLASS A\n");
+    else if (firstoctet >= 128 && firstoctet <= 191)
+        printf("CLASS B\n");
+    else if (firstoctet >= 192 && firstoctet <= 223)
+        printf("CLASS C\n");
+    else if (firstoctet >= 224 && firstoctet <= 239)
+        printf("CLASS D (Military Purposes)\n");
+    else
+        printf("CLASS E (Experimental)\n");
+}
+
+void calculateRange(int ip[], int subnet[])
+{
+    int network[4], broadcast[4];
+
+    for (int i = 0; i < 4; i++)
+    {
+        network[i] = ip[i] & subnet[i];
+        broadcast[i] = network[i] | (~subnet[i] & 255);
+    }
+
+    printf("Network Address: %d.%d.%d.%d\n", network[0], network[1], network[2], network[3]);
+    printf("Broadcast Address: %d.%d.%d.%d\n", broadcast[0], broadcast[1], broadcast[2], broadcast[3]);
+    printf("First IP: %d.%d.%d.%d\n", network[0], network[1], network[2], network[3] + 1);
+    printf("Last IP: %d.%d.%d.%d\n", broadcast[0], broadcast[1], broadcast[2], broadcast[3] - 1);
+}
+
+int main()
+{
+    int ip[4], subnet[4];
+    printf("Enter IP Address (e.g., 192.168.1.1): ");
+    scanf("%d.%d.%d.%d", &ip[0], &ip[1], &ip[2], &ip[3]);
+    printf("Enter Subnet Address (e.g., 255.255.255.0): ");
+    scanf("%d.%d.%d.%d", &subnet[0], &subnet[1], &subnet[2], &subnet[3]);
+
+    findclass(ip[0]);
+    calculateRange(ip, subnet);
+
+    return 0;
+}
