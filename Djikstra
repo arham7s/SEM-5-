@@ -1,0 +1,97 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define INF 99999 // A large value to represent infinity
+#define MAX 100   // Maximum number of nodes
+
+int map[MAX][MAX] = {
+    {0, 7, 9, 0, 0, 4},
+    {7, 0, 10, 15, 0, 0},
+    {9, 10, 0, 11, 0, 2},
+    {0, 15, 11, 0, 6, 0},
+    {0, 0, 0, 6, 0, 9},
+    {4, 0, 2, 0, 9, 0},
+};
+
+int dist[MAX], parent[MAX], visited[MAX] = {0};
+int source, n = 6; // n = Number of nodes
+
+// Function to find the unvisited node with the smallest distance
+int extract_min() {
+    int min_dist = INF, min_index = -1;
+    for (int i = 0; i < n; i++) {
+        if (!visited[i] && dist[i] < min_dist) {
+            min_dist = dist[i];
+            min_index = i;
+        }
+    }
+    return min_index;
+}
+
+// Initialize distances and parents
+void initialize_single_source() {
+    for (int i = 0; i < n; i++) {
+        dist[i] = INF;
+        parent[i] = -1;
+    }
+    dist[source] = 0; // Distance to the source is 0
+}
+
+// Relaxation function
+void relax(int u, int v) {
+    if (dist[v] > dist[u] + map[u][v]) {
+        dist[v] = dist[u] + map[u][v];
+        parent[v] = u;
+    }
+}
+
+// Dijkstra's Algorithm
+void dijkstra() {
+    initialize_single_source();
+
+    for (int i = 0; i < n; i++) {
+        int u = extract_min(); // Get the node with the smallest distance
+        if (u == -1) break;    // All reachable nodes are processed
+        visited[u] = 1;        // Mark the node as visited
+
+        for (int v = 0; v < n; v++) {
+            if (map[u][v] != 0 && !visited[v]) { // Check if there’s an edge
+                relax(u, v);
+            }
+        }
+    }
+}
+
+// Main function
+int main() {
+    // Ask user for the source node
+    printf("Enter the source node (0 to %d): ", n - 1);
+    scanf("%d", &source);
+
+    if (source < 0 || source >= n) {
+        printf("Invalid source node!\n");
+        return 1;
+    }
+
+    dijkstra();
+
+    // Print distances from the source to all nodes
+    printf("\nShortest distances from node %d:\n", source);
+    for (int i = 0; i < n; i++) {
+        if (dist[i] == INF)
+            printf("Node %d: Unreachable\n", i);
+        else
+            printf("Node %d: %d\n", i, dist[i]);
+    }
+
+    // Print parent nodes for the shortest path tree
+    printf("\nParent nodes (Shortest Path Tree):\n");
+    for (int i = 0; i < n; i++) {
+        if (parent[i] == -1)
+            printf("Node %d: None (Source)\n", i);
+        else
+            printf("Node %d: %d\n", i, parent[i]);
+    }
+
+    return 0;
+}
