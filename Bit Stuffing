@@ -1,0 +1,35 @@
+#include <stdio.h>
+#include <string.h>
+
+void bitstuffing() {
+    char data[100], stuffed_data[200] = ""; 
+    int count = 0;
+
+    printf("Enter the data (bit stream): ");
+    scanf("%s", data); 
+
+    int len = strlen(data);
+
+    for (int i = 0; i < len; i++) {
+        if (data[i] == '1') { 
+            count++;
+        } else {
+            count = 0; 
+        }
+
+        strncat(stuffed_data, &data[i], 1); 
+
+        if (count == 5) { 
+            strcat(stuffed_data, "0");
+            count = 0; 
+        }
+        printf("Intermediate stuffed_data: %s\n", stuffed_data);
+    }
+
+    printf("\nTransmitted message (Bit Stuffing): %s\n", stuffed_data);
+}
+
+int main() {
+    bitstuffing();
+    return 0;
+}
