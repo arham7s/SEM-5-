@@ -1,0 +1,41 @@
+#include <stdio.h>
+#include <string.h>
+
+void byte_stuffing() {
+    char message[100], start_flag[10], end_flag[10], escape[10];
+    char transmitted_message[200] = "";  // Output message buffer (make it large enough)
+
+    printf("Enter the message: ");
+    scanf("%s", message);
+    
+    printf("Enter start flag: ");
+    scanf("%s", start_flag);
+    
+    printf("Enter end flag: ");
+    scanf("%s", end_flag);
+    
+    printf("Enter the escape character: ");
+    scanf("%s", escape);
+
+    int len = strlen(message);
+
+    strcat(transmitted_message, start_flag);  // Append start flag to the result
+
+    for (int i = 0; i < len; i++) {
+        char current_char[2] = { message[i], '\0' };  // Convert current character to string
+        if (message[i] == start_flag[0] || message[i] == end_flag[0]) {
+            strcat(transmitted_message, escape);  // Add escape character before special characters
+        }
+        strcat(transmitted_message, current_char);  // Add the current character
+    }
+
+    strcat(transmitted_message, end_flag);  // Append end flag to the result
+
+    printf("Transmitted message with byte stuffing: %s\n", transmitted_message);
+}
+
+int main() {
+    printf("Byte stuffing:\n");
+    byte_stuffing();
+    return 0;
+}
