@@ -1,0 +1,83 @@
+#include <stdio.h>
+#include <limits.h> // For INT_MAX
+
+int map[8][8] = {
+    {0, 6, 5, 5, 0, 0, 0},
+    {0, 0, 0, 0, 1, 0, 0},
+    {0, 2, 0, 0, 1, 0, 0},
+    {0, 0, 2, 0, 0, 1, 0},
+    {0, 0, 0, 0, 0, 0, 3},
+    {0, 0, 0, 0, 0, 0, 3},
+    {0, 0, 0, 0, 0, 0, 0},
+};
+
+int source = 0, n = 7;
+int distance[100], parent[100], visited[100];
+
+void initializesinglesource()
+{
+    for (int i = 0; i < n; i++)
+    {
+        distance[i] = INT_MAX; // Set all distances to infinity
+        parent[i] = -1;        // Initialize parent nodes as -1
+        visited[i] = 0;        // Mark all nodes as unvisited
+    }
+    distance[source] = 0; // Distance to the source is 0
+}
+
+int findminvertex()
+{
+    int minvertex = -1;
+    for (int i = 0; i < n; i++)
+    {
+        if (!visited[i] && (minvertex == -1 || distance[i] < distance[minvertex]))
+        {
+            minvertex = i;
+        }
+    }
+    return minvertex;
+}
+
+void relax(int u, int v)
+{
+    if (distance[v] > distance[u] + map[u][v])
+    {
+        distance[v] = distance[u] + map[u][v];
+        parent[v] = u;
+    }
+}
+
+void dijkstra()
+{
+    initializesinglesource();
+
+    for (int i = 0; i < n - 1; i++) // Repeat for all vertices
+    {
+        int u = findminvertex(); // Pick the unvisited vertex with the smallest distance
+        visited[u] = 1;          // Mark it as visited
+
+        for (int v = 0; v < n; v++)
+        {
+            if (map[u][v] != 0 && !visited[v]) // If there is an edge and v is not visited
+            {
+                relax(u, v); // Use the relax function
+            }
+        }
+    }
+}
+
+int main()
+{
+    dijkstra();
+
+    printf("\nDistance: ");
+    for (int i = 0; i < n; i++)
+    {
+        printf("%d ", distance[i]);
+    }
+    printf("\nParent: ");
+    for (int i = 0; i < n; i++)
+    {
+        printf("%d ", parent[i]);
+    }
+}
