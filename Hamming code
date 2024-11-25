@@ -1,0 +1,70 @@
+#include <stdio.h>
+
+void main() {
+    int i, j, c, c1, c2, c3, data[10], datarec[10];
+    int parity_choice;
+
+    // Choose parity type
+    printf("Choose parity type (0 for even & 1 for odd): ");
+    scanf("%d", &parity_choice);
+
+    // Input 4 bits of data
+    printf("\nEnter 4 bits of data one by one: ");
+    scanf("%d", &data[3]);
+    scanf("%d", &data[5]);
+    scanf("%d", &data[6]);
+    scanf("%d", &data[7]);
+
+    // Calculate parity bits
+    data[1] = data[3] ^ data[5] ^ data[7] ^ parity_choice;
+    data[2] = data[3] ^ data[6] ^ data[7] ^ parity_choice;
+    data[4] = data[5] ^ data[6] ^ data[7] ^ parity_choice;
+
+    // Display parity type
+    printf("\nUsing %s parity\n", parity_choice ? "odd" : "even");
+
+    // Display parity bits
+    printf("Parity bit at P1: %d\n", data[1]);
+    printf("Parity bit at P2: %d\n", data[2]);
+    printf("Parity bit at P4: %d\n", data[4]);
+
+    // Display encoded data
+    printf("\nEncoded data: ");
+    for (j = 1; j <= 7; j++) {
+        printf("%d", data[j]);
+    }
+    printf("\n");
+
+    // Input received data bits
+    printf("\nReceived data: ");
+    for (i = 1; i <= 7; i++) {
+        scanf("%d", &datarec[i]);
+    }
+
+    // Calculate syndrome bits
+    c1 = datarec[1] ^ datarec[3] ^ datarec[5] ^ datarec[7] ^ parity_choice;
+    c2 = datarec[2] ^ datarec[3] ^ datarec[6] ^ datarec[7] ^ parity_choice;
+    c3 = datarec[4] ^ datarec[5] ^ datarec[6] ^ datarec[7] ^ parity_choice;
+
+    c = c3 * 4 + c2 * 2 + c1;
+
+    // Error detection and correction
+    if (c == 0) {
+        printf("\nNo error!\n");
+    } else {
+        printf("\nError on position: %d", c);
+        printf("\nData received: ");
+        for (i = 1; i <= 7; i++) {
+            printf("%d", datarec[i]);
+        }
+        // Correct the error
+        datarec[c] = datarec[c] ^ 1;
+    }
+
+    // Display corrected message
+    printf("\nCorrect message: ");
+    for (i = 1; i <= 7; i++) {
+        printf("%d", datarec[i]);
+    }
+    printf("\n");
+}
